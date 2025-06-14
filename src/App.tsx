@@ -1,16 +1,17 @@
 import {BrowserRouter} from "react-router";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
-import ColorThemeProvider from "./components/ColorThemeProvider.tsx";
-import useColorTheme from "./hooks/userColorTheme.ts";
-import {useMemo} from "react";
+import Layout from "./pages/Layout.tsx";
 
 function App() {
-    const { theme: mode } = useColorTheme();
+    return (
+        <Layout />
+    )
+}
 
-    const theme = useMemo(() => createTheme({
-        palette: {
-            mode,
-            ...(mode === 'light' ? {
+const theme = createTheme({
+    colorSchemes: {
+        light: {
+            palette: {
                 primary: {
                     main: '#673ab7',
                 },
@@ -24,7 +25,10 @@ function App() {
                 error: {
                     main: '#d32f2f',
                 },
-            } : {
+            }
+        },
+        dark: {
+            palette: {
                 primary: {
                     main: '#ba68c8',
                 },
@@ -41,26 +45,23 @@ function App() {
                 text: {
                     primary: '#f1f1f1',
                 },
-            }),
-        },
-        typography: {
-            fontFamily: 'Funnel Sans',
-        },
-    }), [mode]);
-
-    return (
-        <ThemeProvider theme={theme}>
-
-        </ThemeProvider>
-    )
-}
+            }
+        }
+    },
+    typography: {
+        fontFamily: 'Sour Gummy',
+    },
+    cssVariables: {
+        colorSchemeSelector: "class"
+    }
+})
 
 function Wrapper() {
     return (
         <BrowserRouter>
-            <ColorThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+            <ThemeProvider theme={theme}>
                 <App />
-            </ColorThemeProvider>
+            </ThemeProvider>
         </BrowserRouter>
     )
 }

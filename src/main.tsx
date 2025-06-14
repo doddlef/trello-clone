@@ -2,7 +2,8 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
-import {GlobalStyles, StyledEngineProvider} from "@mui/material";
+import { StyledEngineProvider } from '@mui/material/styles';
+import GlobalStyles from '@mui/material/GlobalStyles';
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
