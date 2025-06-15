@@ -10,46 +10,10 @@ function App() {
 
 const theme = createTheme({
     colorSchemes: {
-        light: {
-            palette: {
-                primary: {
-                    main: '#673ab7',
-                },
-                secondary: {
-                    main: '#03a9f4',
-                },
-                background: {
-                    default: '#f0f0f0',
-                    paper: '#f1f1f1',
-                },
-                error: {
-                    main: '#d32f2f',
-                },
-            }
-        },
-        dark: {
-            palette: {
-                primary: {
-                    main: '#ba68c8',
-                },
-                secondary: {
-                    main: '#4fc3f7',
-                },
-                error: {
-                    main: '#d32f2f',
-                },
-                background: {
-                    paper: '#101010',
-                    default: '#111111',
-                },
-                text: {
-                    primary: '#f1f1f1',
-                },
-            }
-        }
+        dark: true,
     },
     typography: {
-        fontFamily: 'Sour Gummy',
+        fontFamily: 'Funnel Display',
     },
     cssVariables: {
         colorSchemeSelector: "class"

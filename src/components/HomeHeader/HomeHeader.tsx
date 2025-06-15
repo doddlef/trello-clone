@@ -3,10 +3,11 @@ import ProjectIcon from "@/components/ProjectIcon/ProjectIcon.tsx";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
 import { Link as RouterLink } from "react-router";
-import {Button} from "@mui/material";
+import {Button, useTheme} from "@mui/material";
 import ThemeSwitch from "@/components/ThemeSwitch/ThemeSwitch.tsx";
 
 function HomeHeader() {
+    const {palette} = useTheme();
     return (
         <Paper
             component={"header"}
@@ -31,7 +32,7 @@ function HomeHeader() {
                 color={"primary"}
                 className={"rounded-4xl"}
             >
-                Sign in
+                {palette.mode}
             </Button>
             <ThemeSwitch />
         </Paper>
