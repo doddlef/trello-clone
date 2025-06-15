@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import GitHubIcon from '@mui/icons-material/GitHub';
 import GoogleIcon from '@mui/icons-material/Google';
-import {useForm} from "react-hook-form";
+import {Controller, useForm} from "react-hook-form";
 import {TextField} from "@mui/material";
 
 type signInRequest = {
@@ -21,7 +21,7 @@ const defaultValues: signInRequest = {
 }
 
 function Layout() {
-    const { handleSubmit, register, formState: { errors } } = useForm({ defaultValues });
+    const { handleSubmit, control } = useForm({ defaultValues });
     const onSubmit = (data: signInRequest) => console.log(data);
 
     return (
@@ -50,20 +50,46 @@ function Layout() {
                     </Button>
                     <Divider />
                     <form onSubmit={handleSubmit(onSubmit)} className={"w-full flex flex-col items-center gap-3"}>
-                        <TextField
-                            className={"w-full"}
-                            type={"email"}
-                            placeholder={"email"}
-                            {...register('email', {required: true})}
+                        <Controller
+                            name={'email'}
+                            control={control}
+                            rules={{ required: true }}
+                            render={({
+                                field: { onChange, value },
+                                fieldState: { error },
+                            }) => (
+                                <TextField
+                                    helperText={error ? error.message : null}
+                                    error={!!error}
+                                    onChange={onChange}
+                                    value={value}
+                                    fullWidth
+                                    label={"Email"}
+                                    variant={"outlined"}
+                                    type={"email"}
+                                />
+                            )}
                         />
-                        {errors.email && ("Email is required")}
-                        <TextField
-                            className={"w-full"}
-                            type={"password"}
-                            placeholder={"password"}
-                            {...register('password', {required: true})}
+                        <Controller
+                            name={'password'}
+                            control={control}
+                            rules={{ required: true }}
+                            render={({
+                                         field: { onChange, value },
+                                         fieldState: { error },
+                                     }) => (
+                                <TextField
+                                    helperText={error ? error.message : null}
+                                    error={!!error}
+                                    onChange={onChange}
+                                    value={value}
+                                    fullWidth
+                                    label={"Password"}
+                                    variant={"outlined"}
+                                    type={"password"}
+                                />
+                            )}
                         />
-                        {errors.password && ("Password is required")}
                         <Button className={"w-full"} type={"submit"}>Log in</Button>
                     </form>
                 </Paper>
