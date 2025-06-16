@@ -60,3 +60,25 @@ export async function emailPasswordRegister(
     });
     return response.json();
 }
+
+export type EmailActiveParams = {
+    token: string;
+}
+
+export type EmailActiveResponse = EmailPasswordAuthResponse
+
+export async function emailActive(
+    { token } : EmailActiveParams
+) : Promise<EmailActiveResponse> {
+    const response = await fetch(getUrl("/api/auth/active"), {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            token
+        }),
+        credentials: "include",
+    });
+    return response.json();
+}
