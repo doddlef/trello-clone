@@ -3,6 +3,8 @@ import {createTheme, ThemeProvider} from "@mui/material/styles";
 import Layout from "./pages/Layout.tsx";
 import DarkModeProvider from "@/components/ThemeModeProvider/ThemeModeProvider.tsx";
 import useDarkMode from "@/hooks/useDarkMode.ts";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
 
 const darkTheme = createTheme({
     palette: {
@@ -38,12 +40,16 @@ function App() {
 }
 
 function Wrapper() {
+    const queryClient = new QueryClient();
     return (
-        <BrowserRouter>
-            <DarkModeProvider>
-                <App />
-            </DarkModeProvider>
-        </BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+            <ReactQueryDevtools />
+            <BrowserRouter>
+                <DarkModeProvider>
+                    <App />
+                </DarkModeProvider>
+            </BrowserRouter>
+        </QueryClientProvider>
     )
 }
 
