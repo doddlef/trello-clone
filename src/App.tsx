@@ -5,6 +5,7 @@ import DarkModeProvider from "@/components/ThemeModeProvider/ThemeModeProvider.t
 import useDarkMode from "@/hooks/useDarkMode.ts";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
+import AccountProvider from "@/components/AccountProvider/AccountProvider.tsx";
 
 const darkTheme = createTheme({
     palette: {
@@ -34,7 +35,9 @@ function App() {
     const { theme } = useDarkMode();
     return (
         <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
-            <Layout />
+            <AccountProvider>
+                <Layout />
+            </AccountProvider>
         </ThemeProvider>
     )
 }

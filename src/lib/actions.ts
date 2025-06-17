@@ -1,4 +1,4 @@
-import type {ApiResponse} from "@/lib/ApiResponse.ts";
+import {type ApiResponse, ResponseCode} from "@/lib/ApiResponse.ts";
 import type {Account} from "@/lib/user.ts";
 
 export function getUrl(url: string): string {
@@ -81,4 +81,73 @@ export async function emailActive(
         credentials: "include",
     });
     return response.json();
+}
+
+export async function tokenRefresh(): Promise<ApiResponse> {
+    const response = await fetch(getUrl("/api/auth/refresh"), {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        credentials: "include",
+    });
+    return response.json();
+}
+
+export async function refreshableResponse(
+    url: string,
+    init?: RequestInit,
+): Promise<ApiResponse> {
+    const fetchWithCreds = (u: string, i?: RequestInit) =>
+        fetch(getUrl(u), { ...i, credentials: "include" });
+
+    let response = await fetchWithCreds(url, init);
+
+    if (response.ok) return response.json();
+
+    let obj: ApiResponse;
+    try {
+        obj = await response.json();
+    } catch {
+        return {
+            code: ResponseCode.ERROR,
+            message: "Unknown error occurred",
+        } as ApiResponse;
+    }
+
+    if (response.status === 401 && obj.code === ResponseCode.TOKEN_EXPIRED) {
+        const refreshResponse = await tokenRefresh();
+        if (refreshResponse.code === ResponseCode.SUCCESS) {
+            response = await fetchWithCreds(url, init);
+            if (response.ok) return response.json();
+            try {
+                return await response.json();
+            } catch {
+                return {
+                    code: ResponseCode.ERROR,
+                    message: "Unknown error occurred after token refresh",
+                } as ApiResponse;
+            }
+        } else {
+            return refreshResponse;
+        }
+    }
+
+    return obj;
+}
+
+export type AccountInfoResponse = ApiResponse & {
+    data?: {
+        account: Account
+    }
+}
+
+export async function accountInfo(): Promise<AccountInfoResponse> {
+    const response = await refreshableResponse("/api/account/me", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        },
+    });
+    return response as AccountInfoResponse;
 }

@@ -2,11 +2,22 @@ import Paper from "@mui/material/Paper";
 import ProjectIcon from "@/components/ProjectIcon/ProjectIcon.tsx";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
-import { Link as RouterLink } from "react-router";
+import {Link as RouterLink, useNavigate} from "react-router";
 import Button from "@mui/material/Button";
 import ThemeSwitch from "@/components/ThemeSwitch/ThemeSwitch.tsx";
+import useAccountInfo from "@/hooks/useAccountInfo.ts";
+import * as React from "react";
 
 function HomeHeader() {
+    const { account, isLoading } = useAccountInfo();
+    const navigate = useNavigate();
+
+    React.useEffect(() => {
+        if (!isLoading && account) {
+            navigate("/dashboard", { replace: true });
+        }
+    }, [account, isLoading, navigate])
+
     return (
         <Paper
             component={"header"}

@@ -1,4 +1,4 @@
-import {useSearchParams} from "react-router";
+import {useNavigate, useSearchParams} from "react-router";
 import {useQuery} from "@tanstack/react-query";
 import {emailActive} from "@/lib/actions.ts";
 import EmailActivePage from "./Page.tsx";
@@ -6,12 +6,18 @@ import AuthHeader from "@/components/AuthHeader/AuthHeader.tsx";
 import Paper from "@mui/material/Paper";
 import {motion} from "framer-motion";
 import {ResponseCode} from "@/lib/ApiResponse.ts";
+import * as React from "react";
 
 function Layout() {
     const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
     const token = searchParams.get("token");
 
-    // TODO: redirect to 404 if token is not provided or invalid
+    React.useEffect(() => {
+        if (!token)
+            navigate("/not-found", {replace: true});
+        }, [token, navigate]);
+
     const { isPending, isError, data, error } = useQuery({
         queryKey: ["email-active", token],
         queryFn: () => emailActive({
@@ -19,6 +25,8 @@ function Layout() {
         }),
         enabled: !!token,
     });
+
+    if (!token) return null;
 
     return (
         <div className={"w-screen h-screen overflow-hidden relative"}>

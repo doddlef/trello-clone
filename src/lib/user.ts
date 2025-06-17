@@ -5,4 +5,5 @@ export type Account = {
     nickname: string;
     status: string;
     role: string;
+    avatarUrl?: string;
 };
