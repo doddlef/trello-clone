@@ -4,28 +4,40 @@ import {Controller, useForm} from "react-hook-form";
 import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
 import {useMutation} from "@tanstack/react-query";
-import {emailPasswordAuth, type EmailPasswordAuthParams} from "@/lib/actions.ts";
+import {emailPasswordAuth, type EmailPasswordAuthParams, type EmailPasswordAuthResponse} from "@/lib/actions.ts";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import * as React from "react";
-import {ResponseCode} from "@/lib/ApiResponse.ts";
+import {type ApiResponse, ResponseCode} from "@/lib/ApiResponse.ts";
 import { motion } from 'framer-motion';
+import {useNavigate} from "react-router";
 
 const defaultValues: EmailPasswordAuthParams = {
     email: "",
     password: "",
 }
 
+type EmailNotVerifiedResponse = ApiResponse & {
+    data: {
+        email: string;
+    }
+}
+
 function LoginForm() {
     const { handleSubmit, control } = useForm({ defaultValues });
     const [ error, setError ] = React.useState<string | null>(null);
+    const navigate = useNavigate();
 
     const mutation = useMutation({
         mutationFn: (data: EmailPasswordAuthParams) => emailPasswordAuth(data),
         onSuccess: (data) => {
             if (data.code === ResponseCode.SUCCESS) {
+                const verified = data as EmailPasswordAuthResponse;
                 // TODO: Handle successful login, e.g., redirect to dashboard or show success message
-                console.log("Login successful:", data);
+                console.log("Login successful:", verified);
+            } else if (data.code === ResponseCode.EMAIL_NOT_VERIFIED) {
+                const notVerified = data as EmailNotVerifiedResponse
+                navigate("/login/resend-email?email=" + encodeURIComponent(notVerified.data.email || ""));
             } else if (data.code === ResponseCode.BAD_CREDENTIALS) {
                 setError("Email or password is incorrect.");
             } else {

@@ -6,6 +6,7 @@ function AccountProvider({ children }: { children?: React.ReactNode}) {
     const { data, isLoading, error } = useQuery({
         queryKey: ["account"],
         queryFn: accountInfo,
+        retry: false,
     });
 
     return (

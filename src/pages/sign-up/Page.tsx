@@ -1,6 +1,10 @@
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import {emailPasswordRegister, type EmailPasswordRegisterParams} from "@/lib/actions.ts";
+import {
+    emailPasswordRegister,
+    type EmailPasswordRegisterParams,
+    type EmailPasswordRegisterResponse
+} from "@/lib/actions.ts";
 import {Controller, useForm} from "react-hook-form";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -29,8 +33,9 @@ function SignUpPage() {
     const { mutate, isPending } = useMutation({
         mutationFn: (data: EmailPasswordRegisterParams) => emailPasswordRegister(data),
         onSuccess: (data) => {
-            if (data.code === ResponseCode.SUCCESS && data.data) {
-                navigate("/sign-up/success?accountUid=" + data.data.accountUid, { replace: true });
+            if (data.code === ResponseCode.SUCCESS) {
+                const result = data as EmailPasswordRegisterResponse
+                navigate("/sign-up/success?accountUid=" + result.data.accountUid, { replace: true });
             } else {
                 setError(data.message || "Registration failed. Please try again later.");
                 console.log(data.message)

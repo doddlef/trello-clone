@@ -11,12 +11,12 @@ export interface EmailPasswordAuthParams {
 }
 
 export type EmailPasswordAuthResponse = ApiResponse & {
-    data?: {
+    data: {
         account: Account
     }
 }
 
-export async function emailPasswordAuth({ email, password }: EmailPasswordAuthParams): Promise<EmailPasswordAuthResponse> {
+export async function emailPasswordAuth({ email, password }: EmailPasswordAuthParams): Promise<ApiResponse> {
     const response = await fetch(getUrl("/api/auth"), {
         method: "POST",
         headers: {
@@ -38,14 +38,14 @@ export interface EmailPasswordRegisterParams {
 }
 
 export type EmailPasswordRegisterResponse = ApiResponse & {
-    data?: {
+    data: {
         accountUid: string
     }
 }
 
 export async function emailPasswordRegister(
     { email, password, nickname } : EmailPasswordRegisterParams
-): Promise<EmailPasswordRegisterResponse> {
+): Promise<ApiResponse> {
     const response = await fetch(getUrl("/api/auth/register"), {
         method: "POST",
         headers: {
@@ -83,8 +83,19 @@ export async function emailActive(
     return response.json();
 }
 
+export async function logout(): Promise<ApiResponse> {
+    const response = await fetch(getUrl("/api/auth/logout"), {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        credentials: "include",
+    });
+    return response.json();
+}
+
 export async function tokenRefresh(): Promise<ApiResponse> {
-    const response = await fetch(getUrl("/api/auth/refresh"), {
+    const response = await fetch(getUrl("/api/auth/resend-token"), {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
