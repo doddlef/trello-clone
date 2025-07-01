@@ -3,8 +3,9 @@ import * as React from "react";
 
 type AccountContextType = {
     account?: Account;
+    setAccount: (account?: Account) => void;
+    refresh: () => void;
     isLoading: boolean;
-    error?: unknown;
 }
 
 export const AccountContext = React.createContext<AccountContextType | undefined>(undefined);

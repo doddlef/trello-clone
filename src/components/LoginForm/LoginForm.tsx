@@ -11,6 +11,7 @@ import * as React from "react";
 import {type ApiResponse, ResponseCode} from "@/lib/ApiResponse.ts";
 import { motion } from 'framer-motion';
 import {useNavigate} from "react-router";
+import useAccountInfo from "@/hooks/useAccountInfo.ts";
 
 const defaultValues: EmailPasswordAuthParams = {
     email: "",
@@ -27,14 +28,16 @@ function LoginForm() {
     const { handleSubmit, control } = useForm({ defaultValues });
     const [ error, setError ] = React.useState<string | null>(null);
     const navigate = useNavigate();
+    const { setAccount } = useAccountInfo();
 
     const mutation = useMutation({
         mutationFn: (data: EmailPasswordAuthParams) => emailPasswordAuth(data),
         onSuccess: (data) => {
             if (data.code === ResponseCode.SUCCESS) {
                 const verified = data as EmailPasswordAuthResponse;
-                // TODO: Handle successful login, e.g., redirect to dashboard or show success message
                 console.log("Login successful:", verified);
+                setAccount(verified.data.account);
+                navigate("/dashboard");
             } else if (data.code === ResponseCode.EMAIL_NOT_VERIFIED) {
                 const notVerified = data as EmailNotVerifiedResponse
                 navigate("/login/resend-email?email=" + encodeURIComponent(notVerified.data.email || ""));

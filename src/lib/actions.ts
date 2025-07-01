@@ -153,12 +153,11 @@ export type AccountInfoResponse = ApiResponse & {
     }
 }
 
-export async function accountInfo(): Promise<AccountInfoResponse> {
-    const response = await refreshableResponse("/api/account/me", {
+export async function accountInfo(): Promise<ApiResponse> {
+    return await refreshableResponse("/api/account/me", {
         method: "GET",
         headers: {
             "Content-Type": "application/json"
         },
-    });
-    return response as AccountInfoResponse;
+    })
 }
